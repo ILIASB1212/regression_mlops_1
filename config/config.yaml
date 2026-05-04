@@ -1,0 +1,11 @@
+artifacts_root: "artifacts"
+
+
+
+
+
+dataingestion:
+  root_dir: "artifacts/data_ingestion"
+  dataset_download_url: "hf://datasets/inGeniia/german-credit-risk_credit-scoring_mlp/german_credit_risk.csv"
+  load_dataset_lacation: "artifacts/data_ingestion/german_credit_risk.csv"
+  upload_dataset_location: "artifacts/data_ingestion/uploaded/german_credit_risk.csv"
