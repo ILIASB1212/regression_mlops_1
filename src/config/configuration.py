@@ -38,33 +38,25 @@ class ConfigurationManager:
         except Exception as e:
             raise e
         
-    def get_data_transformation_config(self) :
-        data=pd.read_csv(self.config.data_transformation.local_data_file)
 
-        create_directories(self.config.data_transformation.root_dir_train)
-
-        logging.info(f"created file at {self.config.data_transformation.root_dir_train}")
-
-        create_directories(self.config.data_transformation.root_dir_test)
-
-        logging.info(f"created file at {self.config.data_transformation.root_dir_test}")
-
-        train,test=train_test_split(data,
-                                    random_state=self.config.data_transformation.random_state,
-                                    test_size=self.config.data_transformation.test_size)
-        
-        logging.info(f"created file at train and test set ")
-
-        train.to_csv(self.config.data_transformation.train_dir)
-
-        logging.info(f"saved trainoing set file at {self.config.data_transformation.train_dir}")
-        logging.info(f"traing set size is {train.shape}")
+    def get_data_transformation_config(self)->DataTransformationConfig:
 
 
-        test.to_csv(self.config.data_transformation.test_dir)
+        data_transformation_config=DataTransformationConfig(
+            local_data_file=self.config.data_transformation.local_data_file,
+            root_dir_train=self.config.data_transformation.root_dir_train,
+            root_dir_test=self.config.data_transformation.root_dir_test,
+            train_dir=self.config.data_transformation.train_dir,
+            test_dir=self.config.data_transformation.test_dir,
+            test_size=self.config.data_transformation.test_size,
+            random_state=self.config.data_transformation.random_state
 
-        logging.info(f"saved test set file at {self.config.data_transformation.test_dir}")
-        logging.info(f"test set size is {test.shape}")
+
+
+
+
+        )
+        return data_transformation_config
 
         
         
