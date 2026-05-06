@@ -147,6 +147,7 @@ cython_debug/
 
 # Logs
 *.log
+.claude
 
 # Database files
 *.db
