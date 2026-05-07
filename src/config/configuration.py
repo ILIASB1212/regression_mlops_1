@@ -1,6 +1,6 @@
 from src.constants import CONFIG_FILE_PATH, PARAMS_FILE_PATH, SCHEMA_FILE_PATH
 from src.utils.common import read_yaml, create_directories
-from src.entity.config_entity import DataIngestionConfig,DataTransformationConfig
+from src.entity.config_entity import DataIngestionConfig,DataTransformationConfig,DataValidationConfig
 
 from src.loging.logger import logging
 from sklearn.model_selection import train_test_split
@@ -37,6 +37,24 @@ class ConfigurationManager:
         
         except Exception as e:
             raise e
+
+
+
+    def get_data_validation_config(self) -> DataValidationConfig:
+
+
+        create_directories(self.config.data_validation.status_folder)
+
+        data_validation_config=DataValidationConfig(
+            root_dir=self.config.data_validation.root_dir,
+            local_data_file=self.config.data_validation.local_data_file,
+            status_folder=self.config.data_validation.status_folder,
+            status_file=self.config.data_validation.status_file,
+            schemas=self.schema.COLUMNS
+
+
+        )
+        return data_validation_config
         
 
     def get_data_transformation_config(self)->DataTransformationConfig:

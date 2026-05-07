@@ -10,7 +10,13 @@ class DataIngestionConfig:
     upload_dataset_location: Path
 
 
-
+@dataclass
+class DataValidationConfig:
+    root_dir: Path
+    local_data_file: Path
+    status_folder: Path
+    status_file: Path
+    schemas: dict
 
 @dataclass
 class DataTransformationConfig:
@@ -20,4 +26,4 @@ class DataTransformationConfig:
     train_dir: Path
     test_dir :Path
     test_size: float
-    random_state: str
+    random_state: int
