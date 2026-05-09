@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import os
 from pathlib import Path
 
 
@@ -27,3 +28,22 @@ class DataTransformationConfig:
     test_dir :Path
     test_size: float
     random_state: int
+
+
+
+@dataclass
+class ModelTrainerConfig:
+    training_set : Path
+    droped_column: str
+    target_columns: str
+    test_size: float
+    model_dir: str
+    model_path: str
+
+
+@dataclass
+class ModelEvaluationConfig:
+    model_path: Path
+    test_set : Path
+    droped_column: str
+    target_columns: str

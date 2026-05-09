@@ -3,7 +3,7 @@ from src.loging.logger import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from src.utils.common import read_yaml, create_directories
+from src.utils.common import read_yaml, create_directorie
 
 class DataTransformation:
     def __init__(self,config:DataTransformationConfig):
@@ -12,11 +12,11 @@ class DataTransformation:
     def split_data_as_train_test(self):
         data=pd.read_csv(self.config.local_data_file)
 
-        create_directories(self.config.root_dir_train)
+        create_directorie(self.config.root_dir_train)
 
         logging.info(f"created file at {self.config.root_dir_train}")
 
-        create_directories(self.config.root_dir_test)
+        create_directorie(self.config.root_dir_test)
 
         logging.info(f"created file at {self.config.root_dir_test}")
 

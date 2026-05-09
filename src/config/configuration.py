@@ -1,6 +1,6 @@
 from src.constants import CONFIG_FILE_PATH, PARAMS_FILE_PATH, SCHEMA_FILE_PATH
-from src.utils.common import read_yaml, create_directories
-from src.entity.config_entity import DataIngestionConfig,DataTransformationConfig,DataValidationConfig
+from src.utils.common import read_yaml, create_directorie
+from src.entity.config_entity import DataIngestionConfig,DataTransformationConfig,DataValidationConfig,ModelTrainerConfig,ModelEvaluationConfig
 
 from src.loging.logger import logging
 from sklearn.model_selection import train_test_split
@@ -22,10 +22,10 @@ class ConfigurationManager:
         self.schema = read_yaml(schema_file_path)
 
 
-        create_directories(self.config.artifacts_root)
+        create_directorie(self.config.artifacts_root)
     def get_data_ingestion_config(self) -> DataIngestionConfig:
         try:
-            create_directories(self.config.dataingestion.root_dir)
+            create_directorie(self.config.dataingestion.root_dir)
             data_ingestion_config=DataIngestionConfig(
                 root_dir=self.config.dataingestion.root_dir,
                 dataset_download_url=self.config.dataingestion.source_URL,
@@ -43,7 +43,7 @@ class ConfigurationManager:
     def get_data_validation_config(self) -> DataValidationConfig:
 
 
-        create_directories(self.config.data_validation.status_folder)
+        create_directorie(self.config.data_validation.status_folder)
 
         data_validation_config=DataValidationConfig(
             root_dir=self.config.data_validation.root_dir,
@@ -68,13 +68,31 @@ class ConfigurationManager:
             test_dir=self.config.data_transformation.test_dir,
             test_size=self.config.data_transformation.test_size,
             random_state=self.config.data_transformation.random_state
-
-
-
-
-
         )
         return data_transformation_config
+    
+
+    def get_model_trainer_config(self)->ModelTrainerConfig:
+        model_trainer_config=ModelTrainerConfig(
+            training_set=self.config.model_trainer.training_set,
+            droped_column=self.config.model_trainer.droped_column,
+            target_columns=self.config.model_trainer.target_columns,
+            test_size=self.config.model_trainer.test_size,
+            model_dir=self.config.model_trainer.model_dir,
+            model_path=self.config.model_trainer.model_path,
+        )
+        return model_trainer_config
+    
+
+
+    def get_model_evaluation_config(self)->ModelEvaluationConfig:
+        model_evaluation_config=ModelEvaluationConfig(
+            model_path=self.config.model_evaluation.model_path,
+            test_set=self.config.model_evaluation.test_set,
+            droped_column=self.config.model_evaluation.droped_column,
+            target_columns=self.config.model_evaluation.target_columns,
+        )
+        return model_evaluation_config
 
         
         

@@ -22,3 +22,20 @@ data_transformation:
   test_dir : artifacts/test/test_set.csv
   test_size: 0.2
   random_state: 50
+
+
+
+model_trainer:
+  training_set : artifacts/train/training_set.csv
+  droped_column: "Unnamed: 0"
+  target_columns: Risk
+  test_size : 0.25
+  model_dir: artifacts/model
+  model_path: artifacts/model/model.pkl
+
+
+model_evaluation:
+  model_path: artifacts/model/model.pkl
+  test_set : artifacts/test/test_set.csv
+  droped_column: "Unnamed: 0"
+  target_columns: Risk

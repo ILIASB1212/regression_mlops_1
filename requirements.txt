@@ -9,3 +9,4 @@ pyyaml
 fsspec
 huggingface_hub
 mlflow
+xgboost

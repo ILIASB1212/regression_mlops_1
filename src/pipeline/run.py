@@ -4,7 +4,8 @@ from src.config.configuration import ConfigurationManager
 from src.components.data_ingestion import DataIngestion
 from src.components.data_transformation import DataTransformation
 from src.components.data_validation import DataValidation
-
+from src.components.model_trainer import ModelTrainer
+from src.components.model_evaluation import ModelEvaluation
 
 
 
@@ -24,7 +25,12 @@ if __name__=="__main__":
     data_transformation_config=config.get_data_transformation_config()
     data_trasformation=DataTransformation(data_transformation_config)
     data_trasformation.split_data_as_train_test()
-
-
+    model_trainer_config=config.get_model_trainer_config()
+    model_trainer=ModelTrainer(model_trainer_config)
+    model_trainer.load_data()
+    model_trainer.initialise_model_trainer()
+    model_evaluation_config=config.get_model_evaluation_config()
+    model_evaluation=ModelEvaluation(model_evaluation_config)
+    model_evaluation.evaluate_model()
 
 

@@ -1,1 +1,15 @@
- key : "values"
+COLUMNS:
+    Unnamed: int64 
+    Age : int64 
+    Sex: object
+    Job: int64 
+    Housing : object
+    Saving accounts: object
+    Checking account: object
+    Credit amount: int64 
+    Duration : int64 
+    Purpose: object
+
+
+TARGET:
+   Risk: object

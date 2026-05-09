@@ -3,7 +3,7 @@ from src.loging.logger import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from src.utils.common import read_yaml, create_directories
+from src.utils.common import read_yaml, create_directorie
 
 
 
