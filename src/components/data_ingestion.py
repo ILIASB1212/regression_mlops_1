@@ -5,7 +5,7 @@ from src.loging.logger import logging
 import sys
 from src.config.configuration import ConfigurationManager
 from src.components.data_transformation import DataTransformation
-
+from src.exceptions.custom_exceptions import CustomException
 
 
 
@@ -20,8 +20,11 @@ class DataIngestion:
             data.to_csv(self.config.load_dataset_lacation,index=False,header=True)
             logging.info(f"Data downloaded from {self.config.dataset_download_url} and saved to {self.config.load_dataset_lacation}")
         except Exception as e:
-            logging.error(f"Error occurred while downloading data: {e}")
-            raise ConnectionError(f"Failed to download data from {self.config.dataset_download_url}",sys)
+            logging.error(f"error in data ingestion class ,error content {e}")
+            CustomException(f"error in data ingestion class error content {e}",sys)
+        
+
+        
 
 
 

@@ -4,7 +4,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from src.utils.common import read_yaml, create_directorie
-
+from src.exceptions.custom_exceptions import CustomException
+import sys
 
 
 
@@ -38,6 +39,7 @@ class DataValidation:
 
             return validation_status
 
+            
         except Exception as e:
-            logging.error(f"Error occurred while downloading data: {e}")
-            raise ConnectionError(f"Failed to download data  {e}")
+            logging.error(f"error in data validation class ,error content {e}")
+            CustomException(f"error in data validation class error content {e}",sys)
