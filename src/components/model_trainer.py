@@ -66,9 +66,12 @@ class ModelTrainer:
             ])
 
             # Create full pipeline (preprocessing + model)
+
+            model=LogisticRegression()
+            model_name = model.__class__.__name__
             pipeline = Pipeline([
                 ('preprocessor', preprocessor),
-                ('classifier', GradientBoostingClassifier())
+                ('classifier', model)
             ])
             mlflow.set_experiment("mlflow bank ")
             with mlflow.start_run():
@@ -81,9 +84,10 @@ class ModelTrainer:
                 logging.info(f"traing model accurecy is {accuracy}")
                 logging.info(f"traing model f1_score is {f1}")
                 mlflow.sklearn.log_model(sk_model=pipeline, artifact_path="model")
-                mlflow.log_params({"pipeline",pipeline})
+                mlflow.log_params({"model_name":model_name,
+                                   "model_params":model.get_params()})
                 mlflow.log_metrics({"accuracy":accuracy,
                                     "f1_score":f1})
         except Exception as e:
             logging.error(f"error in mode trainer class error content {e}")
-            CustomException(f"error in mode trainer class error content {e}",sys)
+            raise CustomException(f"error in mode trainer class error content {e}",sys)

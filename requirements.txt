@@ -10,3 +10,4 @@ fsspec
 huggingface_hub
 mlflow
 xgboost
+pytest

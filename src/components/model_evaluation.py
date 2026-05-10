@@ -3,6 +3,7 @@ from src.utils.common import load_model
 import pandas as pd
 from sklearn.metrics import accuracy_score,f1_score
 from src.loging.logger import logging
+import numpy as np
 
 
 
@@ -33,4 +34,4 @@ class ModelEvaluation:
             import sys
         except Exception as e:
             logging.error(f"error in model evaluation class ,error content {e}")
-            CustomException(f"error in model evaluation class error content {e}",sys)
+            raise CustomException(f"error in model evaluation class error content {e}",sys)
