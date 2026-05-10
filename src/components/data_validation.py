@@ -28,12 +28,13 @@ class DataValidation:
                     validation_status = False
                     with open(self.config.status_file, 'w') as f:
                         f.write(f"Validation status: {validation_status}")
-                        logging.info("data validated sussesfuly")
+                        logging.error(f"error data validation --verify your data's columns --> {col}")
+                        
                 else:
                     validation_status = True
                     with open(self.config.status_file, 'w') as f:
                         f.write(f"Validation status: {validation_status}")
-                        logging.error("error data validation --verify your data--")
+                        logging.info(f"data validated sussesfuly --> {col}")
 
             return validation_status
 
