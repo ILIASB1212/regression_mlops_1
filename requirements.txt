@@ -12,3 +12,4 @@ mlflow
 xgboost
 pytest
 dagshub
+uvicorn
