@@ -17,6 +17,12 @@ from src.exceptions.custom_exceptions import CustomException
 import mlflow
 from sklearn.ensemble import GradientBoostingClassifier
 import numpy as np
+import dagshub
+
+
+
+
+
 
 
 
@@ -25,6 +31,7 @@ import numpy as np
 class ModelTrainer:
     def __init__(self,config:ModelTrainerConfig):
         self.config=config
+        dagshub.init(repo_owner='ILIASB1212', repo_name='regression_mlops_1', mlflow=True)
     def load_data(self):
         try:
             
@@ -52,7 +59,6 @@ class ModelTrainer:
         try:
             # Build ColumnTransformer
             preprocessor = ColumnTransformer([
-                # Numeric: impute mean/median, then scale
                 ('num', Pipeline([
                     ('imputer', SimpleImputer(strategy='median')),  
                     ('scaler', StandardScaler())
@@ -65,6 +71,7 @@ class ModelTrainer:
             ])
 
             # Create full pipeline (preprocessing + model)
+            mlflow.set_experiment("mlflow bank ")
             models=[GradientBoostingClassifier,RandomForestClassifier,LogisticRegression,XGBClassifier]
             report={}
             pipelines={}
@@ -78,29 +85,35 @@ class ModelTrainer:
                     ('classifier', ml_model)
                 ])
 
-                mlflow.set_experiment("mlflow bank ")
+                
                 with mlflow.start_run():
-                # Fit and predict
+                    # fit the model/pipeline
                     pipeline.fit(self.x_train,self.y_train)   
+                    # predict and test accuracy
                     predictions = pipeline.predict(self.x_test)
                     accuracy=accuracy_score(predictions,self.y_test)
-
                     f1=f1_score(predictions,self.y_test)
+                    #save the models scores and names in the 
                     report[model_name]=f1
                     pipelines[model_name] = pipeline
-                    save_model(pipeline,self.config.model_path)
 
                     logging.info(f"traing model: {model_name} accurecy is {accuracy}")
                     logging.info(f"traing model: {model_name} f1_score is {f1}")
+                    # save models performense and atributes
                     mlflow.sklearn.log_model(sk_model=pipeline, artifact_path="model")
+                    # save models params
                     mlflow.log_params({"model_name":model_name,
+                                       
                                     "model_params":ml_model.get_params()})
+                    # save models performense
                     mlflow.log_metrics({"accuracy":accuracy,
                                         "f1_score":f1})
+
             logging.info(f"models report == {report}")
 
+            # save the best models performence
             best_model_name = max(report, key=report.get)
-
+            # save the best model for test set
             save_model(pipelines[best_model_name], self.config.model_path)
             logging.info(f"Best model saved: {best_model_name} | F1: {report[best_model_name]:.4f}")
         except Exception as e:
