@@ -40,5 +40,5 @@ class DataTransformation:
             logging.info(f"test set size is {test.shape}")
         except Exception as e:
             logging.error(f"error in data transformation class ,error content {e}")
-            CustomException(f"error in data transformation class error content {e}",sys)
+            raise CustomException(f"error in data transformation class error content {e}",sys)
 

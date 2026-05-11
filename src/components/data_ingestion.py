@@ -21,7 +21,7 @@ class DataIngestion:
             logging.info(f"Data downloaded from {self.config.dataset_download_url} and saved to {self.config.load_dataset_lacation}")
         except Exception as e:
             logging.error(f"error in data ingestion class ,error content {e}")
-            CustomException(f"error in data ingestion class error content {e}",sys)
+            raise CustomException(f"error in data ingestion class error content {e}",sys)
         
 
         

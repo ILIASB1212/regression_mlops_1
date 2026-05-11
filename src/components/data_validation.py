@@ -42,4 +42,4 @@ class DataValidation:
             
         except Exception as e:
             logging.error(f"error in data validation class ,error content {e}")
-            CustomException(f"error in data validation class error content {e}",sys)
+            raise CustomException(f"error in data validation class error content {e}",sys)

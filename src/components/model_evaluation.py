@@ -4,6 +4,8 @@ import pandas as pd
 from sklearn.metrics import accuracy_score,f1_score
 from src.loging.logger import logging
 import numpy as np
+from src.exceptions.custom_exceptions import CustomException
+import sys
 
 
 
@@ -30,8 +32,7 @@ class ModelEvaluation:
             f1=f1_score(predict,y)
             logging.info(f"testing model f1_score is {f1}")
 
-            from src.exceptions.custom_exceptions import CustomException
-            import sys
+            
         except Exception as e:
             logging.error(f"error in model evaluation class ,error content {e}")
             raise CustomException(f"error in model evaluation class error content {e}",sys)

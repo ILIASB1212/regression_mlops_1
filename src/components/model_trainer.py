@@ -66,28 +66,34 @@ class ModelTrainer:
             ])
 
             # Create full pipeline (preprocessing + model)
+            models=[GradientBoostingClassifier,RandomForestClassifier,LogisticRegression,XGBClassifier]
+            report={}
+            for model in models:
+                ml_model=model()
+                model_name = model.__class__.__name__
+                pipeline = Pipeline([
+                    ('preprocessor', preprocessor),
+                    ('classifier', ml_model)
+                ])
+                mlflow.set_experiment("mlflow bank ")
+                with mlflow.start_run():
+                # Fit and predict
+                    pipeline.fit(self.x_train,self.y_train)   # example target
+                    predictions = pipeline.predict(self.x_test)
+                    accuracy=accuracy_score(predictions,self.y_test)
 
-            model=LogisticRegression()
-            model_name = model.__class__.__name__
-            pipeline = Pipeline([
-                ('preprocessor', preprocessor),
-                ('classifier', model)
-            ])
-            mlflow.set_experiment("mlflow bank ")
-            with mlflow.start_run():
-            # Fit and predict
-                pipeline.fit(self.x_train,self.y_train)   # example target
-                save_model(pipeline,self.config.model_path)
-                predictions = pipeline.predict(self.x_test)
-                accuracy=accuracy_score(predictions,self.y_test)
-                f1=f1_score(predictions,self.y_test)
-                logging.info(f"traing model accurecy is {accuracy}")
-                logging.info(f"traing model f1_score is {f1}")
-                mlflow.sklearn.log_model(sk_model=pipeline, artifact_path="model")
-                mlflow.log_params({"model_name":model_name,
-                                   "model_params":model.get_params()})
-                mlflow.log_metrics({"accuracy":accuracy,
-                                    "f1_score":f1})
+                    f1=f1_score(predictions,self.y_test)
+                    report[model_name]=accuracy
+                    save_model(pipeline,self.config.model_path)
+
+                    logging.info(f"traing model: {model_name} accurecy is {accuracy}")
+                    logging.info(f"traing model: {model_name} f1_score is {f1}")
+                    mlflow.sklearn.log_model(sk_model=pipeline, artifact_path="model")
+                    mlflow.log_params({"model_name":model_name,
+                                    "model_params":ml_model.get_params()})
+                    mlflow.log_metrics({"accuracy":accuracy,
+                                        "f1_score":f1})
+            logging.info(f"models report == {report}")
         except Exception as e:
             logging.error(f"error in mode trainer class error content {e}")
             raise CustomException(f"error in mode trainer class error content {e}",sys)
