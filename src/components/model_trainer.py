@@ -54,11 +54,10 @@ class ModelTrainer:
             preprocessor = ColumnTransformer([
                 # Numeric: impute mean/median, then scale
                 ('num', Pipeline([
-                    ('imputer', SimpleImputer(strategy='median')),  # or 'mean'
+                    ('imputer', SimpleImputer(strategy='median')),  
                     ('scaler', StandardScaler())
                 ]), self.intigers),
                 
-                # Categorical: impute with most frequent, then one-hot encode
                 ('cat', Pipeline([
                     ('imputer', SimpleImputer(strategy='most_frequent')),
                     ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
@@ -68,22 +67,27 @@ class ModelTrainer:
             # Create full pipeline (preprocessing + model)
             models=[GradientBoostingClassifier,RandomForestClassifier,LogisticRegression,XGBClassifier]
             report={}
+            pipelines={}
+
             for model in models:
                 ml_model=model()
                 model_name = ml_model.__class__.__name__
+
                 pipeline = Pipeline([
                     ('preprocessor', preprocessor),
                     ('classifier', ml_model)
                 ])
+
                 mlflow.set_experiment("mlflow bank ")
                 with mlflow.start_run():
                 # Fit and predict
-                    pipeline.fit(self.x_train,self.y_train)   # example target
+                    pipeline.fit(self.x_train,self.y_train)   
                     predictions = pipeline.predict(self.x_test)
                     accuracy=accuracy_score(predictions,self.y_test)
 
                     f1=f1_score(predictions,self.y_test)
                     report[model_name]=f1
+                    pipelines[model_name] = pipeline
                     save_model(pipeline,self.config.model_path)
 
                     logging.info(f"traing model: {model_name} accurecy is {accuracy}")
@@ -94,10 +98,11 @@ class ModelTrainer:
                     mlflow.log_metrics({"accuracy":accuracy,
                                         "f1_score":f1})
             logging.info(f"models report == {report}")
-            # After the loop, pick the best
+
             best_model_name = max(report, key=report.get)
-            logging.info(f"Best model: {best_model_name} with accuracy {report[best_model_name]}")
-            # Then save only the best one
+
+            save_model(pipelines[best_model_name], self.config.model_path)
+            logging.info(f"Best model saved: {best_model_name} | F1: {report[best_model_name]:.4f}")
         except Exception as e:
             logging.error(f"error in mode trainer class error content {e}")
             raise CustomException(f"error in mode trainer class error content {e}",sys)
