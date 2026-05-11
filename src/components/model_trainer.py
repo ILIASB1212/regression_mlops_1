@@ -70,7 +70,7 @@ class ModelTrainer:
             report={}
             for model in models:
                 ml_model=model()
-                model_name = model.__class__.__name__
+                model_name = ml_model.__class__.__name__
                 pipeline = Pipeline([
                     ('preprocessor', preprocessor),
                     ('classifier', ml_model)
@@ -83,7 +83,7 @@ class ModelTrainer:
                     accuracy=accuracy_score(predictions,self.y_test)
 
                     f1=f1_score(predictions,self.y_test)
-                    report[model_name]=accuracy
+                    report[model_name]=f1
                     save_model(pipeline,self.config.model_path)
 
                     logging.info(f"traing model: {model_name} accurecy is {accuracy}")
@@ -94,6 +94,10 @@ class ModelTrainer:
                     mlflow.log_metrics({"accuracy":accuracy,
                                         "f1_score":f1})
             logging.info(f"models report == {report}")
+            # After the loop, pick the best
+            best_model_name = max(report, key=report.get)
+            logging.info(f"Best model: {best_model_name} with accuracy {report[best_model_name]}")
+            # Then save only the best one
         except Exception as e:
             logging.error(f"error in mode trainer class error content {e}")
             raise CustomException(f"error in mode trainer class error content {e}",sys)
