@@ -31,7 +31,7 @@ import dagshub
 class ModelTrainer:
     def __init__(self,config:ModelTrainerConfig):
         self.config=config
-        dagshub.init(repo_owner='ILIASB1212', repo_name='regression_mlops_1', mlflow=True)
+        
     def load_data(self):
         try:
             
@@ -58,6 +58,7 @@ class ModelTrainer:
         
         try:
             # Build ColumnTransformer
+
             preprocessor = ColumnTransformer([
                 ('num', Pipeline([
                     ('imputer', SimpleImputer(strategy='median')),  
@@ -71,6 +72,7 @@ class ModelTrainer:
             ])
 
             # Create full pipeline (preprocessing + model)
+            dagshub.init(repo_owner='ILIASB1212', repo_name='regression_mlops_1', mlflow=True)
             mlflow.set_experiment("mlflow bank ")
             models=[GradientBoostingClassifier,RandomForestClassifier,LogisticRegression,XGBClassifier]
             report={}
